@@ -1,0 +1,28 @@
+name: Keep Streamlit App Awake
+
+on:
+  schedule:
+    # اجرای اتوماتیک هر ۶ ساعت یک بار (کرون جاب)
+    - cron: '0 */6 * * *'
+  # امکان اجرای دستی از داخل تب Actions گیت‌هاب
+  workflow_dispatch:
+
+jobs:
+  wake-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Playwright and Dependencies
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Run Wake Up Script
+        run: python keep_alive.py
